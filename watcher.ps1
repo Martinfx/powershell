@@ -41,9 +41,10 @@ function Invoke-SomeAction
   switch($ChangeInformation.ChangeType) {
       'Changed'  { "CHANGED" }
       'Created'  { "CREATED"
-         $newpath = Join-Path $path $ChangeInformation.Name  
+         $newpath = Join-Path $path $ChangeInformation.Name 
+         $name = $ChangeInformation.Name
          write $newpath
-         Copy-Item -Path $newpath -Destination C:\test2 -Recurse
+         Copy-Item -Path $newpath -Destination C:\$name -Recurse
       }
       'Deleted'  { "DELETED"}
       'Renamed'  { 
@@ -67,15 +68,6 @@ try
     NotifyFilter = $AttributeFilter
   }
 
-  #Register-ObjectEvent -InputObject $FileSystemWatcher -SourceIdentifier Monitoring1  -EventName Created  -Action {
-
-  #$Object  = "{0} was  {1} at {2}" -f $Event.SourceEventArgs.FullPath,
-  #$Event.SourceEventArgs.ChangeType,
-  #$Event.TimeGenerated
-  #write  -f $Event.SourceEventArgs.FullPath
- # Write-Host $Object -ForegroundColor Green
-#}
-
   # start monitoring manually in a loop:
   do
   {
@@ -92,6 +84,10 @@ try
     Invoke-SomeAction -Change $result
     # the loop runs forever until you hit CTRL+C    
   } while ($true)
+}
+catch {
+    Write-Host $_.Exception.Message -Foreground "Red"
+    Write-Host $_.ScriptStackTrace -Foreground "DarkGray"
 }
 finally
 {
