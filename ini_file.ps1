@@ -11,9 +11,12 @@ else {
 
 
 if(Test-Path -Path "C:\test\test.ini" -Verbose ) {
-$obj = Get-Ini -Path C:\test\test.ini
-write $obj.{[owner]}.'name '
-write $obj.{[owner]}.'organization '
+    $obj = Get-Ini -Path C:\test\test.ini
+    write $obj.{[owner]}.'name '
+    write $obj.{[owner]}.'organization '
+
+    write $obj.{[database]}.'file '
+    write $obj.{[database]}.'port '
 } else {
     write "File not exist! C:\test\test.ini"
 }
