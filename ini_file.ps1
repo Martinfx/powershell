@@ -1,4 +1,7 @@
-
+#<
+# Example for read ini file from folder 
+# with IniManager mnodule
+#>
 
 if (Get-Module -ListAvailable -Name IniManager) {
     Write-Host "Module exists"
