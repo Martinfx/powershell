@@ -39,4 +39,16 @@ Get-ChildItem -name C:\file.txt
 Get-ChildItem -Path "C:\*" -Include *.ps1
 
 # return from actual folder and subfolders all .txt file
-get-childitem . -include *.txt -recurse -force
+#get-childitem . -include *.txt -recurse -force
+
+try {
+ $files = Get-ChildItem -Path "C:\TimDavis" -ErrorAction Stop
+
+ $files | ForEach-Object {
+ "Doing something on $($_.Name)"
+ }
+} catch {
+ Write-Host "Directory doesn't exist, can't do anything"
+}
+
+"Script Finished"
