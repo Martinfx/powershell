@@ -92,8 +92,8 @@ function IntuneWin32AppTest {
                                 Write-Verbose -Message "Successfully created Win32 app package object"
 
                                 # Retrieve Win32 app package meta data
-                                $FilePath = (Get-ChildItem -Path *.intunewin -Recurse).FullName
-                                            # Attemp to open compressed .intunewin archive file from parameter input
+                                $FilePath = (Get-ChildItem -Path  $OutputFolder *.intunewin).FullName
+
                                 $IntuneWin32AppFile = [System.IO.Compression.ZipFile]::OpenRead($FilePath)
                           
                                  # Attempt to extract meta data from .intunewin file
@@ -119,6 +119,11 @@ function IntuneWin32AppTest {
                                         Write-Warning -Message "An error occurred while reading application information from detection.xml file. Error message: $($_.Exception.Message)"
                                 }
 
+                                
+                                $IntuneWinAppPackageFullPath = (Get-ChildItem -Path $OutputFolder | where {$_.Extension -eq ".msi" -or $_.Extension -eq ".exe"} ).FullName    
+                                Write-Host $IntuneWinAppPackageFullPath 
+                                Write-Host  (Get-ChildItem -Path $OutputFolder | where {$_.Extension -eq ".msi" -or $_.Extension -eq ".exe"} ).VersionInfo.ProductVersion
+
 
                                 # Construct output object with package details
                                 $PSObject = [PSCustomObject]@{
@@ -128,10 +133,11 @@ function IntuneWin32AppTest {
                                     "UnencryptedContentSize" = $IntuneWinAppMetaData.ApplicationInfo.UnencryptedContentSize
                                     "Path" = $IntuneWinAppPackage
                                 }
-
-                                Write-Output -InputObject $PSObject
-                                write $IntuneWinAppMetaData.ApplicationInfo.Name + " " + $IntuneWinAppMetaData.ApplicationInfo.MsiInfo.MsiProductVersion
-                                write $IntuneWinAppMetaData.ApplicationInfo.MsiInfo.MsiPublisheronInfo.Name
+                                
+                                
+                                
+                                #write $IntuneWinAppMetaData.ApplicationInfo.Name + " " + $IntuneWinMetaData.ApplicationInfo.MsiInfo.MsiProductVersion
+                                #write $IntuneWinAppMetaData.ApplicationInfo.MsiInfo.MsiPublisheronInfo.Name
                                 
 
                               # Add-IntuneWin32App -FilePath $FilePath -DisplayName $DisplayName -Description $DisplayName -Publisher $Publisher -InstallExperience "system" -RestartBehavior "suppress" -DetectionRule $DetectionRule -ReturnCode $ReturnCode -Icon $Icon -Verbose
